@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using UtilsLib;
 
 namespace TelegramBot
 {
@@ -13,6 +14,7 @@ namespace TelegramBot
     {
         public static void Main(string[] args)
         {
+            Console.WriteLine($"EnvVar: {AppConfig.EnvVar}");
             CreateHostBuilder(args).Build().Run();
         }
 
