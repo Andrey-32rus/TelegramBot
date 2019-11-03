@@ -31,11 +31,6 @@ namespace TelegramBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers().AddNewtonsoftJson();
-            //Task.Run(() =>
-            //{
-            //    Thread.Sleep(10000);
-            //    Bot.Initialize();
-            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,8 +42,6 @@ namespace TelegramBot
             }
 
             app.UseRouting();
-            app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
-
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
