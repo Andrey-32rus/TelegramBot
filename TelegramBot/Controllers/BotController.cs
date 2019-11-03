@@ -9,7 +9,7 @@ using Telegram.Bot.Types;
 
 namespace TelegramBot.Controllers
 {
-    [Route("")]
+    [Route("[controller]")]
     [ApiController]
     public class BotController : ControllerBase
     {
