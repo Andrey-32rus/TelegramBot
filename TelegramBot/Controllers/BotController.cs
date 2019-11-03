@@ -16,11 +16,7 @@ namespace TelegramBot.Controllers
         [HttpPost("update")]
         public void Update(Update request)
         {
-            using (StreamReader reader = new StreamReader(Request.Body))
-            {
-                var body = reader.ReadToEndAsync().Result;
-                var obj = JsonConvert.DeserializeObject<Update>(body);
-            }
+
         }
     }
 }
