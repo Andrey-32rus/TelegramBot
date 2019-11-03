@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.Json;
+using System.Threading;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -10,6 +12,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.Net.Http.Headers;
+using TelegramBot.BotLogic;
 using UtilsLib;
 
 namespace TelegramBot
@@ -27,6 +31,11 @@ namespace TelegramBot
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddControllers();
+            //Task.Run(() =>
+            //{
+            //    Thread.Sleep(10000);
+            //    Bot.Initialize();
+            //});
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -37,8 +46,8 @@ namespace TelegramBot
                 app.UseDeveloperExceptionPage();
             }
 
-            app.UseHttpsRedirection();
             app.UseRouting();
+            app.UseCors(config => config.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin());
 
             app.UseEndpoints(endpoints =>
             {

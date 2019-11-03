@@ -11,7 +11,8 @@
   "profiles": {
     "TelegramBot": {
       "commandName": "Project",
-      "launchUrl": "weatherforecast",
+      "launchBrowser": true,
+      "launchUrl": "ping",
       "environmentVariables": {
         "EnvVar": "Development",
         "ASPNETCORE_ENVIRONMENT": "Development"
