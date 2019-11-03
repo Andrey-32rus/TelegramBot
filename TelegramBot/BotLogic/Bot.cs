@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MihaZupan;
 using Telegram.Bot;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.Enums;
 using UtilsLib;
 
 namespace TelegramBot.BotLogic
@@ -23,6 +26,39 @@ namespace TelegramBot.BotLogic
             Client = new TelegramBotClient(token, new HttpToSocks5Proxy(socks5Host, socks5Port));
             Client.SetWebhookAsync(webHooksUrl).Wait();
             //var str = UtilsLib.HttpUtils.Get("http://b8216a98.ngrok.io/ping");
+        }
+
+        public static async Task Update(Update update)
+        {
+            if (update.Type != UpdateType.Message)
+            {
+                return;
+            }
+
+            var message = update.Message;
+
+            //_logger.LogInformation("Received Message from {0}", message.Chat.Id);
+
+            if (message.Type == MessageType.Text)
+            {
+                // Echo each Message
+                await Client.SendTextMessageAsync(message.Chat.Id, message.Text);
+            }
+            else if (message.Type == MessageType.Photo)
+            {
+                // Download Photo
+                var fileId = message.Photo.LastOrDefault()?.FileId;
+                var file = await Client.GetFileAsync(fileId);
+
+                var filename = file.FileId + "." + file.FilePath.Split('.').Last();
+
+                using (var saveImageStream = System.IO.File.Open(filename, FileMode.Create))
+                {
+                    await Client.DownloadFileAsync(file.FilePath, saveImageStream);
+                }
+
+                await Client.SendTextMessageAsync(message.Chat.Id, "Thx for the Pics");
+            }
         }
     }
 }
