@@ -8,8 +8,8 @@ namespace TelegramBot.BotLogic
     public class BotConfiguration
     {
         public string BotToken { get; set; }
-        public string Socks5Host { get; set; }
-        public int Socks5Port { get; set; }
+        public string ProxyHost { get; set; }
+        public int ProxyPort { get; set; }
         public string WebHooksUrl { get; set; }
     }
 }

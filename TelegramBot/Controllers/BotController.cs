@@ -17,12 +17,19 @@ namespace TelegramBot.Controllers
     [ApiController]
     public class BotController : ControllerBase
     {
+        private readonly IBot botLogic;
+
+        public BotController(IBot bot)
+        {
+            botLogic = bot;
+        }
+
         [HttpPost("update")]
         public ActionResult Update(Update request)
         {
             try
             {
-                var task = Bot.Update(request);
+                var task = botLogic.Update(request);
                 return Ok();
             }
             catch (Exception e)

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Net;
 using System.Threading.Tasks;
 using MihaZupan;
+using Newtonsoft.Json;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -12,24 +13,21 @@ using UtilsLib;
 
 namespace TelegramBot.BotLogic
 {
-    public static class Bot
+    public class Bot : IBot
     {
-        private static TelegramBotClient Client;
+        private readonly TelegramBotClient client;
 
-        public static void Initialize()
+        public Bot()
         {
-            // use proxy if configured in appsettings.*.json
             var config = AppConfig.GetSection<BotConfiguration>("BotConfiguration");
-            //string token = AppConfig.GetValue<string>("BotConfiguration:BotToken");
-            //string socks5Host = AppConfig.GetValue<string>("BotConfiguration:Socks5Host");
-            //int socks5Port = AppConfig.GetValue<int>("BotConfiguration:Socks5Port");
-            //string webHooksUrl = AppConfig.GetValue<string>("BotConfiguration:WebHooksUrl");
-            Client = new TelegramBotClient(config.BotToken, new HttpToSocks5Proxy(config.Socks5Host, config.Socks5Port));
-            Client.SetWebhookAsync(config.WebHooksUrl).Wait();
-            //var str = UtilsLib.HttpUtils.Get("http://b8216a98.ngrok.io/ping");
+            
+            var proxy = new WebProxy($"http://{config.ProxyHost}:{config.ProxyPort}");
+            client = new TelegramBotClient(config.BotToken, proxy);
+            client.SetWebhookAsync(config.WebHooksUrl).Wait();
+            Console.WriteLine("WebHook was set");
         }
 
-        public static async Task Update(Update update)
+        public async Task Update(Update update)
         {
             if (update.Type != UpdateType.Message)
             {
@@ -43,22 +41,25 @@ namespace TelegramBot.BotLogic
             if (message.Type == MessageType.Text)
             {
                 // Echo each Message
-                await Client.SendTextMessageAsync(message.Chat.Id, message.Text);
+                string text = $"{JsonConvert.SerializeObject(message.From, Formatting.Indented)}{Environment.NewLine}{Environment.NewLine}" +
+                              $"Said:{Environment.NewLine}{Environment.NewLine}" +
+                              $"{message.Text}";
+                await client.SendTextMessageAsync(message.Chat.Id, text);
             }
             else if (message.Type == MessageType.Photo)
             {
                 // Download Photo
                 var fileId = message.Photo.LastOrDefault()?.FileId;
-                var file = await Client.GetFileAsync(fileId);
+                var file = await client.GetFileAsync(fileId);
 
                 var filename = file.FileId + "." + file.FilePath.Split('.').Last();
 
                 using (var saveImageStream = System.IO.File.Open(filename, FileMode.Create))
                 {
-                    await Client.DownloadFileAsync(file.FilePath, saveImageStream);
+                    await client.DownloadFileAsync(file.FilePath, saveImageStream);
                 }
 
-                await Client.SendTextMessageAsync(message.Chat.Id, "Thx for the Pics");
+                await client.SendTextMessageAsync(message.Chat.Id, "Thx for the Pics");
             }
         }
     }
