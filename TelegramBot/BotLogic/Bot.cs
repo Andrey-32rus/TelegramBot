@@ -41,8 +41,10 @@ namespace TelegramBot.BotLogic
             if (message.Type == MessageType.Text)
             {
                 // Echo each Message
-                string text = $"{JsonConvert.SerializeObject(message.From, Formatting.Indented)}{Environment.NewLine}{Environment.NewLine}" +
-                              $"Said:{Environment.NewLine}{Environment.NewLine}" +
+                string text = $"{JsonConvert.SerializeObject(message.From, Formatting.Indented)}" +
+                              $"{Environment.NewLine}{Environment.NewLine}" +
+                              $"Said:" +
+                              $"{Environment.NewLine}{Environment.NewLine}" +
                               $"{message.Text}";
                 await client.SendTextMessageAsync(message.Chat.Id, text);
             }
