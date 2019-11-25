@@ -49,6 +49,9 @@ namespace TelegramBot
             {
                 endpoints.MapControllers();
             });
+
+            //Проиниициализирует подключение перед стартом сервиса
+            app.ApplicationServices.GetService<IBot>();
         }
     }
 }
