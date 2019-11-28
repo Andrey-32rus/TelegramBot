@@ -51,7 +51,7 @@ namespace TelegramBot
             });
 
             //Проиниициализирует подключение перед стартом сервиса
-            app.ApplicationServices.GetService<IBot>();
+            app.ApplicationServices.GetRequiredService<IBot>();
         }
     }
 }
