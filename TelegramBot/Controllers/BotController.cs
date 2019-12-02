@@ -26,10 +26,12 @@ namespace TelegramBot.Controllers
 
         [HttpPost]
         public ActionResult Post(Update request)
-        {
+         {
             try
             {
                 var task = botLogic.Update(request);
+                task.Wait();
+
                 return Ok();
             }
             catch (Exception e)
