@@ -26,7 +26,7 @@ namespace TelegramBot.Controllers
 
         [HttpPost]
         public ActionResult Post(Update request)
-         {
+        {
             try
             {
                 var task = botLogic.Update(request);
