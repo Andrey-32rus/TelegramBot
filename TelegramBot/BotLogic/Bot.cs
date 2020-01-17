@@ -54,8 +54,7 @@ namespace TelegramBot.BotLogic
                 var file = await client.GetFileAsync(fileId);
 
                 var filename = file.FileId + "." + file.FilePath.Split('.').Last();
-
-                using (var saveImageStream = System.IO.File.Open(filename, FileMode.Create))
+                await using (var saveImageStream = System.IO.File.Open(filename, FileMode.Create))
                 {
                     await client.DownloadFileAsync(file.FilePath, saveImageStream);
                 }
