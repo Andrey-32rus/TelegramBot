@@ -29,8 +29,7 @@ namespace TelegramBot.Controllers
         {
             try
             {
-                var task = botLogic.Update(request);
-                task.Wait();
+                botLogic.Update(request);
 
                 return Ok();
             }
